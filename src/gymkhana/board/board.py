@@ -1,6 +1,6 @@
-from .piece import Piece
-from .node import Node
-from .constants import BGCOLOR, ROWS, COLS, FORBIDDEN_SQUARES
+from gymkhana.board.piece import Piece
+from gymkhana.board.node import Node
+from gymkhana.constants import BGCOLOR, ROWS, COLS, FORBIDDEN_SQUARES
 
 class Board:
     def __init__(self, color_1, color_2):

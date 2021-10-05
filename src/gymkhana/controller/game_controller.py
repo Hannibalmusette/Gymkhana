@@ -1,8 +1,8 @@
 import pygame
-from .player import Player
-from .board import Board
+from gymkhana.player import Player
+from gymkhana.board import Board
 
-class Game:
+class GameController:
     def __init__(self, win):
         self._init()
         self.win = win
