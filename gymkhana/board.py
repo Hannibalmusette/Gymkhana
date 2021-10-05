@@ -3,18 +3,25 @@ from .node import Node
 from .constants import BGCOLOR, ROWS, COLS, FORBIDDEN_SQUARES
 
 class Board:
-    def __init__(self):
+    def __init__(self, color_1, color_2):
         self.board = []
-        self.create()
+        self.color_1 = color_1
+        self.color_2 = color_2
+        self.create(self.color_1, self.color_2)
 
-    def create(self):
+    def create(self, color_1, color_2):
         for row in range(ROWS):
             self.board.append([])
             for col in range(COLS):
                 if row % 2 == col % 2:
                     self.board[row].append(0)
                 else:
-                    self.board[row].append(Node(row, col))
+                    if row % 2 == 0:
+                        color = color_1
+                    else:
+                        color = color_2
+                    self.board[row].append(Node(row, col, color))
+
 
     def draw(self, win):
         win.fill(BGCOLOR)
@@ -39,8 +46,8 @@ class Board:
         node_1.add_connection(node_2.row, node_2.col)
         node_2.add_connection(node_1.row, node_1.col)
 
-    def add_piece(self, row, col, color):
-        piece = Piece(row, col, color)
+    def add_piece(self, row, col, num, color):
+        piece = Piece(row, col, num, color)
         self.board[row][col] = piece
         self.connect(piece)
 
@@ -51,7 +58,7 @@ class Board:
         for connection in self.look_for_connections(node, path):
             path.append(connection)
             row, col = connection
-            return self.winning_path(self.board[row][col], path) if col < 10 and row < 10 else 'END'
+            return self.winning_path(self.board[row][col], path) if max(col, row) < 10 else 'END'
 
     def winner(self):
         winner = None
@@ -61,6 +68,6 @@ class Board:
                     departure_node = self.board[row][col]
                     path = [(row, col)]
                     if self.winning_path(departure_node, path):
-                        winner = 'yes'
+                        winner = 'ok'
 
         return winner
