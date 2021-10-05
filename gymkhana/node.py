@@ -1,16 +1,11 @@
 import pygame
-from .constants import (
-    RED,
-    BLUE,
-    SQUARE_SIZE,
-    PADDING
-)
+from .constants import (SQUARE_SIZE, PADDING)
 
 class Node:
-    def __init__(self, row, col):
+    def __init__(self, row, col, color):
         self.row = row
         self.col = col
-        self.color = RED if row % 2 == 0 else BLUE
+        self.color = color
         self.connections = []
 
     def draw(self, win):
@@ -18,7 +13,6 @@ class Node:
         pygame.draw.circle(
             win,
             self.color,
-            #we need the coordinates
             (SQUARE_SIZE * self.col + PADDING, SQUARE_SIZE * self.row + PADDING),
             radius
         )

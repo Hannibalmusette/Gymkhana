@@ -1,15 +1,16 @@
 import pygame
-from .constants import RED, BLUE, SQUARE_SIZE, PADDING, PIECE_LEN, PIECE_LAR
+from .constants import SQUARE_SIZE, PADDING, PIECE_LEN, PIECE_LAR
 
 class Piece:
 
-    def __init__(self, row, col, color):
+    def __init__(self, row, col, player, color):
         self.row = row
         self.col = col
+        self.player = player
         self.color = color
 
     def is_horizontal(self):
-        return (self.color == RED and self.row % 2 == 0) or (self.color == BLUE and self.row % 2 != 0) 
+        return (self.player == 1 and self.row % 2 == 0) or (self.player == 2 and self.row % 2 != 0) 
 
     def calc_size(self):
         self.width = PIECE_LEN
