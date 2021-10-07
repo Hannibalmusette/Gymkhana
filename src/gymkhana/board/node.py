@@ -1,5 +1,6 @@
 import pygame
-from .constants import (SQUARE_SIZE, PADDING)
+from gymkhana.constants import SQUARE_SIZE, PADDING
+
 
 class Node:
     def __init__(self, row, col, color):
@@ -14,11 +15,11 @@ class Node:
             win,
             self.color,
             (SQUARE_SIZE * self.col + PADDING, SQUARE_SIZE * self.row + PADDING),
-            radius
+            radius,
         )
 
     def add_connection(self, row, col):
         self.connections.append((row, col))
 
     def __repr__(self):
-        return str(self.color) + ' NODE'
+        return str(self.color) + " NODE"

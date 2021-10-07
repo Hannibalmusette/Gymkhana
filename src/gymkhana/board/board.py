@@ -1,6 +1,7 @@
 from gymkhana.board.piece import Piece
 from gymkhana.board.node import Node
-from gymkhana.constants import BGCOLOR, ROWS, COLS, FORBIDDEN_SQUARES
+from gymkhana.constants import BG_COLOR, ROWS, COLS, FORBIDDEN_SQUARES
+
 
 class Board:
     def __init__(self, color_1, color_2):
@@ -22,9 +23,8 @@ class Board:
                         color = color_2
                     self.board[row].append(Node(row, col, color))
 
-
     def draw(self, win):
-        win.fill(BGCOLOR)
+        win.fill(BG_COLOR)
         for row in self.board:
             for sq in row:
                 elem = sq
@@ -38,11 +38,11 @@ class Board:
         row = piece.row
         col = piece.col
         if piece.is_horizontal():
-            node_1 = self.board[row][col-1]
-            node_2 = self.board[row][col+1]
+            node_1 = self.board[row][col - 1]
+            node_2 = self.board[row][col + 1]
         else:
-            node_1 = self.board[row-1][col]
-            node_2 = self.board[row+1][col]
+            node_1 = self.board[row - 1][col]
+            node_2 = self.board[row + 1][col]
         node_1.add_connection(node_2.row, node_2.col)
         node_2.add_connection(node_1.row, node_1.col)
 
@@ -58,7 +58,11 @@ class Board:
         for connection in self.look_for_connections(node, path):
             path.append(connection)
             row, col = connection
-            return self.winning_path(self.board[row][col], path) if max(col, row) < 10 else 'END'
+            return (
+                self.winning_path(self.board[row][col], path)
+                if max(col, row) < 10
+                else "END"
+            )
 
     def winner(self):
         winner = None
@@ -68,6 +72,6 @@ class Board:
                     departure_node = self.board[row][col]
                     path = [(row, col)]
                     if self.winning_path(departure_node, path):
-                        winner = 'ok'
+                        winner = "ok"
 
         return winner
