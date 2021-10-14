@@ -3,11 +3,15 @@ from gymkhana.board.node import Node
 from gymkhana.constants import BG_COLOR, ROWS, COLS, FORBIDDEN_SQUARES
 
 
+def look_for_connections(node, path):
+    return (connection for connection in node.connections if connection not in path)
+
+
 class Board:
-    def __init__(self, color_1, color_2):
+    def __init__(self, player_1, player_2):
         self.board = []
-        self.color_1 = color_1
-        self.color_2 = color_2
+        self.color_1 = player_1.color
+        self.color_2 = player_2.color
         self.create(self.color_1, self.color_2)
 
     def create(self, color_1, color_2):
@@ -32,7 +36,11 @@ class Board:
                     elem.draw(win)
 
     def you_can_use_this_square(self, row, col):
-        return (row, col) not in FORBIDDEN_SQUARES and self.board[row][col] == 0
+        return (
+            row % 2 == col % 2
+            and (row, col) not in FORBIDDEN_SQUARES
+            and self.board[row][col] == 0
+        )
 
     def connect(self, piece):
         row = piece.row
@@ -51,27 +59,31 @@ class Board:
         self.board[row][col] = piece
         self.connect(piece)
 
-    def look_for_connections(self, node, path):
-        return (connection for connection in node.connections if connection not in path)
+    def count_empty_squares(self):
+        squares = 0
+        for row in self.board:
+            for sq in row:
+                if sq == 0:
+                    squares += 1
+        return squares - len(FORBIDDEN_SQUARES) // 2
 
-    def winning_path(self, node, path):
-        for connection in self.look_for_connections(node, path):
-            path.append(connection)
+    def winning_path(self, path):
+        for connection in path:
             row, col = connection
-            return (
-                self.winning_path(self.board[row][col], path)
-                if max(col, row) < 10
-                else "END"
-            )
+            if row == ROWS - 1 or col == COLS - 1:
+                return True
+            node = self.board[row][col]
+            path.extend(look_for_connections(node, path))
 
     def winner(self):
         winner = None
         for row in range(ROWS):
             for col in range(COLS):
                 if (col == 0 or row == 0) and isinstance(self.board[row][col], Node):
-                    departure_node = self.board[row][col]
                     path = [(row, col)]
-                    if self.winning_path(departure_node, path):
-                        winner = "ok"
+                    if self.winning_path(path):
+                        winner = True
+                    elif self.count_empty_squares() == 0:
+                        winner = "NO ONE"
 
         return winner
