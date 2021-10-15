@@ -1,13 +1,21 @@
 import pygame
 from gymkhana.colorbox import ColorBox
 from gymkhana.namebox import NameBox
-from gymkhana.constants import FONT, WRITING_COLOR, WIDTH, HEIGHT
+from gymkhana.constants import FONT, WIDTH, HEIGHT
 
 pygame.init()
 
 
 class InputBox:
-    def __init__(self, win, player, num):
+    def __init__(self, win, player: str, num: int):
+        """
+        Initializes the input box.
+        The position and size are calculated according to the size of the screen and the number of players.
+        Initializes the color box and the name box.
+        :param win: The screen that was defined in 'main'
+        :param player: either "Player 1" or "Player 2"
+        :param num: player's number (either 1 or 2)
+        """
         self.win = win
 
         self.left = WIDTH // 18
@@ -41,9 +49,13 @@ class InputBox:
         self.player = player
 
     def draw(self, win):
+        """
+        Draws the color box, name box, and "Player 1 :" or "Player 2 :".
+        The color of the "Player" and name box is defined according to the color selected in the color box
+        :param win: The screen that was defined in 'main'
+        """
         self.color = self.color_box.select
 
-        # Blit the player's number.
         player_txt = self.font.render(self.player, True, self.color)
         player_rect = player_txt.get_rect()
         player_rect.center = (self.left + self.width // 2, self.top)
@@ -53,4 +65,10 @@ class InputBox:
         self.color_box.draw_circles()
 
     def handle_event(self, event):
+        """
+        Calls the two functions that handle events in the color box and the name box respectively.
+        Updates the color or name that might have been modified.
+        :param event: has to be a player clicking
+        :return: The chosen colors and names so far.
+        """
         return self.color_box.handle_event(event), self.name_box.handle_event(event)

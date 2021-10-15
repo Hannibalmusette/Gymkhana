@@ -1,7 +1,5 @@
-from .constants import COLORS, BG_COLOR, WRITING_COLOR, WIDTH, HEIGHT, FONT
+from .constants import COLORS, FONT
 import random
-import pygame
-from gymkhana.inputbox import InputBox
 
 
 class Player:
