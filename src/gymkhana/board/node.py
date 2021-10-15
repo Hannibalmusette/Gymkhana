@@ -10,6 +10,11 @@ class Node:
         self.connections = []
 
     def draw(self, win):
+        """
+        Draws a given node.
+        :param win: the screen defined in 'game'
+        :return: nothing
+        """
         radius = SQUARE_SIZE // 4
         pygame.draw.circle(
             win,
@@ -18,7 +23,11 @@ class Node:
             radius,
         )
 
-    def add_connection(self, row, col):
+    def add_connection(self, row: int, col: int):
+        """
+        Is called each time a piece is added, on the two nodes that just got connected.
+        :return: updates the 'self.connections' list for a given node.
+        """
         self.connections.append((row, col))
 
     def __repr__(self):

@@ -2,7 +2,6 @@ import pygame
 
 pygame.init()
 
-NUMBER_OF_PLAYERS = 2
 WIDTH, HEIGHT = 550, 550
 ROWS, COLS = 11, 11
 SQUARE_SIZE = WIDTH // COLS
