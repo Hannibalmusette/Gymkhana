@@ -1,7 +1,4 @@
 import pygame
-import random
-from gymkhana.constants import WHITE
-from typing import Tuple
 
 pygame.init()
 
@@ -27,6 +24,7 @@ class TickBot:
         self.tick_square = pygame.Rect(
             self.left, self.top - self.height // 2, self.height, self.height
         )
+        self.tick_radius = self.height // 2
 
     def draw(self, win, color):
         self.color = color
@@ -34,12 +32,11 @@ class TickBot:
         win.blit(self.txt, self.rect)
         pygame.draw.rect(self.win, self.color, self.tick_square, 1)
         if self.bot:
-            tick_radius = self.height // 2
             pygame.draw.circle(
                 self.win,
                 color,
-                (self.left + tick_radius, self.top),
-                tick_radius,
+                (self.left + self.tick_radius, self.top),
+                self.tick_radius,
             )
 
     def handle_event(self, event):
@@ -50,10 +47,9 @@ class TickBot:
         :param event: has to be a player typing or clicking
         :return: The name that was typed by the player (or by default "Enter name" if not changed)
         """
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if self.tick_square.collidepoint(event.pos) and not self.bot:
-                self.bot = True
-            elif self.tick_square.collidepoint(event.pos) and self.bot:
-                self.bot = False
+        if event.type == pygame.MOUSEBUTTONDOWN and self.tick_square.collidepoint(
+            event.pos
+        ):
+            self.bot = True if not self.bot else False
 
         return self.bot

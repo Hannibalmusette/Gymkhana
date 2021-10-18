@@ -132,9 +132,9 @@ class Board:
             for col in range(COLS):
                 if (col == 0 or row == 0) and isinstance(self.board[row][col], Node):
                     path = [(row, col)]
-                    if self.winning_path(path):
-                        winner = True
-                    elif self.count_empty_squares() == 0:
+                    if self.count_empty_squares() == 0:
                         winner = "NO ONE"
+                    elif self.winning_path(path):
+                        winner = True
 
         return winner

@@ -68,7 +68,6 @@ class GameController:
 
         if self.player_1.bot:
             self.player_1 = Bot(self.player_1)
-
         if self.player_2.bot:
             self.player_2 = Bot(self.player_2)
 
