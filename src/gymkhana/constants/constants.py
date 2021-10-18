@@ -11,6 +11,7 @@ FORBIDDEN_SQUARES = (
     | {(x, COLS - 1) for x in range(ROWS)}
     | {(ROWS - 1, y) for y in range(COLS)}
 )
+ALL_SQUARES = ROWS * COLS - 2 * len(FORBIDDEN_SQUARES)
 PADDING = SQUARE_SIZE // 2
 FONT = pygame.font.Font(None, 32)
 
