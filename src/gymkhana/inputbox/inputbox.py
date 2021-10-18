@@ -1,6 +1,7 @@
 import pygame
-from gymkhana.colorbox import ColorBox
-from gymkhana.namebox import NameBox
+from gymkhana.inputbox.colorbox import ColorBox
+from gymkhana.inputbox.namebox import NameBox
+from gymkhana.inputbox.bot_or_player import TickBot
 from gymkhana.constants import FONT, WIDTH, HEIGHT
 
 pygame.init()
@@ -10,7 +11,7 @@ class InputBox:
     def __init__(self, win, player: str, num: int):
         """
         Initializes the input box.
-        The position and size are calculated according to the size of the screen and the number of players.
+        Its position and size are calculated according to the size of the screen and the number of players.
         Initializes the color box and the name box.
         :param win: The screen that was defined in 'main'
         :param player: either "Player 1" or "Player 2"
@@ -46,6 +47,16 @@ class InputBox:
             self.font,
         )
 
+        self.bot_or_player = TickBot(
+            self.win,
+            self.left + self.width * 4 // 5,
+            self.top,
+            self.width // 6,
+            self.height // 6,
+            self.color,
+            self.font,
+        )
+
         self.player = player
 
     def draw(self, win):
@@ -61,6 +72,7 @@ class InputBox:
         player_rect.center = (self.left + self.width // 2, self.top)
         win.blit(player_txt, player_rect)
 
+        self.bot_or_player.draw(win, self.color)
         self.name_box.draw(win, self.color)
         self.color_box.draw_circles()
 
@@ -71,4 +83,8 @@ class InputBox:
         :param event: has to be a player clicking
         :return: The chosen colors and names so far.
         """
-        return self.color_box.handle_event(event), self.name_box.handle_event(event)
+        return (
+            self.color_box.handle_event(event),
+            self.name_box.handle_event(event),
+            self.bot_or_player.handle_event(event),
+        )
