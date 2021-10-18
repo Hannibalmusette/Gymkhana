@@ -50,8 +50,9 @@ def is_ready(event):
 class GameController:
     def __init__(self, win):
         """
-        Starts the game by initializing 2 players, allowing them to choose a color and a name
-        and setting bots that can play instead of them.
+        Starts the game by initializing 2 players, who each gets a random color - making sure
+        they are two different colors. Then allows them to choose a color and a name
+        and sets bots that can play instead of them.
         Then, it initializes the board using the two players that were defined.
         'self.tun' indicates the first player that is going to play (either player or bot).
         :param win: The screen that was defined in 'main'
@@ -59,18 +60,25 @@ class GameController:
         self.win = win
         self.player_1 = Player(self.win, 1)
         self.player_2 = Player(self.win, 2)
+        while self.player_2.color == self.player_1.color:
+            self.player_2 = Player(self.win, 2)
         self.choices()
 
-        self.bot_1 = Bot(self.player_1)
-        self.bot_2 = Bot(self.player_2)
-
         self.board = Board(self.player_1, self.player_2)
-        self.turn = self.bot_1
+
+        if self.player_1.bot:
+            self.player_1 = Bot(self.player_1)
+
+        if self.player_2.bot:
+            self.player_2 = Bot(self.player_2)
+
+        self.turn = self.player_1
 
     def choices(self):
         """
         Each player has a color and a name by default that were randomly defined.
         This function displays input boxes that allow them to choose, before the game actually starts.
+        Each player can also be made a bot.
         It ends when a player hits the 'ready' button.
         """
         input_box_1 = InputBox(self.win, self.player_1.player, 1)
@@ -100,8 +108,16 @@ class GameController:
                 ):
                     done = True
                 else:
-                    self.player_1.color, self.player_1.name = input_box_1.handle_event(event)
-                    self.player_2.color, self.player_2.name = input_box_2.handle_event(event)
+                    (
+                        self.player_1.color,
+                        self.player_1.name,
+                        self.player_1.bot,
+                    ) = input_box_1.handle_event(event)
+                    (
+                        self.player_2.color,
+                        self.player_2.name,
+                        self.player_2.bot,
+                    ) = input_box_2.handle_event(event)
 
     def update(self):
         """
@@ -115,10 +131,17 @@ class GameController:
         """
         Determines who is going to play next, according to who just did.
         """
-        if self.turn == self.bot_1:
+        if self.turn == self.player_1:
             self.turn = self.player_2
         else:
-            self.turn = self.bot_1
+            self.turn = self.player_1
+
+    def bot_turn(self):
+        """
+        Checks whether the current player is a bot
+        :return: True or False
+        """
+        return isinstance(self.turn, Bot)
 
     def move(self, row: int, col: int):
         """

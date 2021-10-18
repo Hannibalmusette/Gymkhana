@@ -66,9 +66,9 @@ class Board:
         :return: True or False
         """
         return (
-                row % 2 == col % 2
-                and (row, col) not in FORBIDDEN_SQUARES
-                and self.board[row][col] == 0
+            row % 2 == col % 2
+            and (row, col) not in FORBIDDEN_SQUARES
+            and self.board[row][col] == 0
         )
 
     def connect(self, piece: Piece):
@@ -103,8 +103,8 @@ class Board:
         Check how many free squares are left
         """
         return (
-                len([square for row in self.board for square in row if square == 0])
-                - len(FORBIDDEN_SQUARES) // 2
+            len([square for row in self.board for square in row if square == 0])
+            - len(FORBIDDEN_SQUARES) // 2
         )
 
     def winning_path(self, path: List):

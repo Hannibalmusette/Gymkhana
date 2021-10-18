@@ -24,7 +24,9 @@ class Piece:
         Checks if a piece is horizontal or vertical and reverses width and height if needed.
         :return: the piece's width and height
         """
-        return (PIECE_LEN, PIECE_LAR) if self.is_horizontal() else (PIECE_LAR, PIECE_LEN)
+        return (
+            (PIECE_LEN, PIECE_LAR) if self.is_horizontal() else (PIECE_LAR, PIECE_LEN)
+        )
 
     def draw(self, win):
         """

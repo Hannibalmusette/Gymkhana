@@ -46,12 +46,8 @@ def main():
                 row, col = get_square_from_mouse(pos)
                 game_controller.move(row, col)
 
-        if (
-            game_controller.turn == game_controller.bot_1
-            or game_controller.turn == game_controller.bot_2
-        ):
-            bot = game_controller.turn
-            game_controller.bot_move(bot)
+        if game_controller.bot_turn():
+            game_controller.bot_move(game_controller.turn)
 
         game_controller.update()
 
