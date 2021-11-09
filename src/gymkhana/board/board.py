@@ -8,9 +8,7 @@ from gymkhana.player import Player
 
 def look_for_connections(node: Node, path: List) -> Generator:
     """
-    :param node: last node reached when checking the path
-    :param path: the path we are currently checking
-    :return: A generator allowing to iterate on the node connections that are not already in the path
+    For a given node, look for connections that are not in its path.
     """
     return (connection for connection in node.connections if connection not in path)
 
@@ -20,16 +18,13 @@ class Board:
         self.board = []
         self.color_1 = player_1.color
         self.color_2 = player_2.color
-        self.create(self.color_1, self.color_2)
+        self.initial_board(self.color_1, self.color_2)
 
-    def create(self, color_1: Tuple, color_2: Tuple):
+    def initial_board(self, color_1: Tuple, color_2: Tuple):
         """
-        Creates the board as a list of list containing all the squares and what is in them.
-        Since it's the beginning of the game, only nodes are added.
+        Create the board as a list of list containing all the squares and what is in them.
+        Since it is the beginning of the game, only nodes are added.
         All the squares that might contain pieces later get the value '0'
-        :param color_1: player 1 color
-        :param color_2: player 2 color
-        :return: updates 'self.board' (list of list)
         """
         for row in range(ROWS):
             self.board.append([])
@@ -45,11 +40,7 @@ class Board:
 
     def draw(self, win):
         """
-        Draws all the elements that are on the board (nodes or pieces), calling their
-        respective 'draw' function.
-        This function is called by the game controller after each move.
-        :param win: the screen we are drawing the whole game in, defined in 'main'.
-        :return: nothing
+        Draw all the elements (node or piece) that are on the board.
         """
         win.fill(BG_COLOR)
         for row in self.board:
@@ -59,11 +50,7 @@ class Board:
 
     def you_can_use_this_square(self, row: int, col: int) -> bool:
         """
-        Check if it is allowed to add a piece on a given square, i.e.:
-        - not a node
-        - not at the end of the board
-        - not occupied (value = 0)
-        :return: True or False
+        Check if it is allowed to add a piece on a given square.
         """
         return (
             row % 2 == col % 2
@@ -73,10 +60,7 @@ class Board:
 
     def connect(self, piece: Piece):
         """
-        When adding a piece to the board, the two nodes that it just connected
-        are updated : the other node's coordinates are added in each list of 'connections'
-        :param piece: The piece that was just added to the board
-        :return: nothing
+        Add each of the two nodes that were connected to the other one's list of connections
         """
         row = piece.row
         col = piece.col
@@ -89,10 +73,9 @@ class Board:
         node_1.add_connection(node_2.row, node_2.col)
         node_2.add_connection(node_1.row, node_1.col)
 
-    def add_piece(self, row: int, col: int, num: int, color: Tuple):
+    def add_piece(self, row, col, num: int, color: Tuple):
         """
-        Add a new piece to the board by adding its value in the board's list of list.
-        :return: nothing
+        Add a new piece to the board
         """
         piece = Piece(row, col, num, color)
         self.board[row][col] = piece
@@ -100,7 +83,7 @@ class Board:
 
     def count_empty_squares(self) -> int:
         """
-        Check how many free squares are left
+        Check how many free squares are left.
         """
         return (
             len([square for row in self.board for square in row if square == 0])
@@ -109,10 +92,7 @@ class Board:
 
     def winning_path(self, path: List):
         """
-        Checks if a given path (starting in row 0 or col 0) is winning
-        (reaching the last row or col) by looking for all the connections
-        between nodes and adding them in the path list.
-        :return: True when the last row or col is reached, otherwise None
+        Check if a given path is winning.
         """
         for connection in path:
             row, col = connection
@@ -123,9 +103,7 @@ class Board:
 
     def winner(self):
         """
-        Checks if there is a winner but setting a path for every node that is in row 0 or col 0,
-        then calling the 'winning_path' function on each of them.
-        :return: True if a winning path is found, 'NO ONE' if there are no free squares left, else None
+        Check if there is a winner.
         """
         winner = None
         for row in range(ROWS):
@@ -134,7 +112,8 @@ class Board:
                     path = [(row, col)]
                     if self.count_empty_squares() == 0:
                         winner = "NO ONE"
+                        break
                     elif self.winning_path(path):
                         winner = True
-
+                        break
         return winner

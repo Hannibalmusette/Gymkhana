@@ -1,31 +1,21 @@
 import pygame
-from gymkhana.inputbox.colorbox import ColorBox
-from gymkhana.inputbox.namebox import NameBox
-from gymkhana.inputbox.bot_or_player import TickBot
+from .colorbox import ColorBox
+from .namebox import NameBox
+from .bot_or_player import TickBot
 from gymkhana.constants import FONT, WIDTH, HEIGHT
 
 pygame.init()
 
 
 class InputBox:
-    def __init__(self, win, player: str, num: int):
-        """
-        Initializes the input box.
-        Its position and size are calculated according to the size of the screen and the number of players.
-        Initializes the color box and the name box.
-        :param win: The screen that was defined in 'main'
-        :param player: either "Player 1" or "Player 2"
-        :param num: player's number (either 1 or 2)
-        """
+    def __init__(self, win, player: str, num: int, font = FONT, left: int = WIDTH//18, width: int = WIDTH * 9//10, height: int = HEIGHT//4, top: int = HEIGHT//8):
         self.win = win
+        self.left = left
+        self.width = width
+        self.height = height
+        self.top = top + self.height * (num - 1)
 
-        self.left = WIDTH // 18
-        self.width = WIDTH * 9 // 10
-        self.height = HEIGHT // 4
-
-        self.top = HEIGHT // 8 + self.height * (num - 1)
-
-        self.font = FONT
+        self.font = font
 
         self.color_box = ColorBox(
             self.win,
@@ -59,15 +49,13 @@ class InputBox:
 
         self.player = player
 
-    def draw(self, win):
+    def draw(self, win, rend=True):
         """
-        Draws the color box, name box, and "Player 1 :" or "Player 2 :".
-        The color of the "Player" and name box is defined according to the color selected in the color box
-        :param win: The screen that was defined in 'main'
+        Draw the color box, name box, and "Player 1 :" or "Player 2 :".
         """
         self.color = self.color_box.select
 
-        player_txt = self.font.render(self.player, True, self.color)
+        player_txt = self.font.render(self.player, rend, self.color)
         player_rect = player_txt.get_rect()
         player_rect.center = (self.left + self.width // 2, self.top)
         win.blit(player_txt, player_rect)
@@ -78,10 +66,7 @@ class InputBox:
 
     def handle_event(self, event):
         """
-        Calls the two functions that handle events in the color box and the name box respectively.
-        Updates the color or name that might have been modified.
-        :param event: has to be a player clicking
-        :return: The chosen colors and names so far.
+        Update choices.
         """
         return (
             self.color_box.handle_event(event),
