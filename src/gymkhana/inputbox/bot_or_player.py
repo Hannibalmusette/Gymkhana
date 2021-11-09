@@ -5,12 +5,6 @@ pygame.init()
 
 class TickBot:
     def __init__(self, win, x: int, y: int, w: int, h: int, color, font):
-        """
-        Initializes a box that allows to tick whether the player should be a bot or not.
-        The dimensions (x, y, w, h) are given when calling the init function.
-        The player is by default not a bot.
-        :param win: The screen defined in 'main'
-        """
         self.win = win
         self.font = font
         self.color = color
@@ -40,13 +34,6 @@ class TickBot:
             )
 
     def handle_event(self, event):
-        """
-        Selects the rectangle when clicked on and deletes the previous value.
-        Allows the player to type its name in the rectangle as long as its active.
-        The rectangle is unactivated when clicking somewhere else or pressing "Enter".
-        :param event: has to be a player typing or clicking
-        :return: The name that was typed by the player (or by default "Enter name" if not changed)
-        """
         if event.type == pygame.MOUSEBUTTONDOWN and self.tick_square.collidepoint(
             event.pos
         ):
