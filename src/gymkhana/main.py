@@ -1,11 +1,7 @@
 import pygame
-from gymkhana.constants import WIDTH, HEIGHT, SQUARE_SIZE
+from gymkhana.constants import SQUARE_SIZE
 from gymkhana.controller import GameController
 from typing import Tuple
-
-pygame.init()
-WIN = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Gymkhana")
 
 
 def get_square_from_mouse(pos: Tuple, sq_size=SQUARE_SIZE) -> Tuple:
@@ -22,7 +18,7 @@ def main():
     Run the game while it has to, i.e. there is no winner and no one closed the game windows.
     """
     run = True
-    game_controller = GameController(WIN)
+    game_controller = GameController()
 
     while run:
 
@@ -44,5 +40,6 @@ def main():
 
     pygame.quit()
 
-
+pygame.init()
+pygame.display.set_caption("Gymkhana")
 main()

@@ -3,6 +3,7 @@ import pygame
 pygame.init()
 
 WIDTH, HEIGHT = 550, 550
+WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 ROWS, COLS = 11, 11
 SQUARE_SIZE = WIDTH // COLS
 FORBIDDEN_SQUARES = (
@@ -11,7 +12,7 @@ FORBIDDEN_SQUARES = (
     | {(x, COLS - 1) for x in range(ROWS)}
     | {(ROWS - 1, y) for y in range(COLS)}
 )
-ALL_SQUARES = ROWS * COLS - 2 * len(FORBIDDEN_SQUARES)
+TOTAL_SQUARES = ROWS * COLS - 2 * len(FORBIDDEN_SQUARES)
 PADDING = SQUARE_SIZE // 2
 FONT = pygame.font.Font(None, 32)
 

@@ -74,9 +74,6 @@ class Board:
         node_2.add_connection(node_1.row, node_1.col)
 
     def add_piece(self, row, col, num: int, color: Tuple):
-        """
-        Add a new piece to the board
-        """
         piece = Piece(row, col, num, color)
         self.board[row][col] = piece
         self.connect(piece)

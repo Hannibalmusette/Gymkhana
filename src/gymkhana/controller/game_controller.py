@@ -3,8 +3,7 @@ from gymkhana.player import Player
 from gymkhana.inputbox import InputBox
 from gymkhana.board import Board
 from gymkhana.smarter_than_you import Bot
-from gymkhana.constants import BG_COLOR, WRITING_COLOR, WIDTH, HEIGHT, FONT
-from typing import Tuple
+from gymkhana.constants import WIN, BG_COLOR, WRITING_COLOR, WIDTH, HEIGHT, FONT
 
 
 def ready_rect(txt : str = "READY", font=FONT, rend=True, color=WRITING_COLOR, width=WIDTH, height=HEIGHT):
@@ -23,16 +22,16 @@ def is_ready(event) -> bool:
 
 
 class GameController:
-    def __init__(self, win):
-        self.win = win
+    def __init__(self):
+        self.turns_counter = 0
 
         #Initialize two players who each gets a random color
-        self.player_1 = Player(self.win, 1)
-        self.player_2 = Player(self.win, 2)
+        self.player_1 = Player(1)
+        self.player_2 = Player(2)
 
         # Make sure each player gets a different color
         while self.player_2.color == self.player_1.color:
-            self.player_2 = Player(self.win, 2)
+            self.player_2 = Player(2)
 
         # Allow the players to choose their color, name and whether they are a bot.
         self.choices()
@@ -47,25 +46,25 @@ class GameController:
 
         self.turn = self.player_1
 
-    def choices(self, bgcolor=BG_COLOR, color=WRITING_COLOR):
+    def choices(self, win=WIN, bgcolor=BG_COLOR, color=WRITING_COLOR):
         """
         Display input boxes that allow the players to choose their name and color.
         Each player can also be made a bot.
         """
-        input_box_1 = InputBox(self.win, self.player_1.player, 1)
-        input_box_2 = InputBox(self.win, self.player_2.player, 2)
+        input_box_1 = InputBox(1)
+        input_box_2 = InputBox(2)
 
         done = False
 
         while not done:
 
-            self.win.fill(bgcolor)
+            win.fill(bgcolor)
 
-            input_box_1.draw(self.win)
-            input_box_2.draw(self.win)
+            input_box_1.draw()
+            input_box_2.draw()
 
-            pygame.draw.rect(self.win, color, ready_button(), 2)
-            self.win.blit(*ready_rect())
+            pygame.draw.rect(win, color, ready_button(), 2)
+            win.blit(*ready_rect())
 
             pygame.display.flip()
 
@@ -89,24 +88,19 @@ class GameController:
                         self.player_2.bot,
                     ) = input_box_2.handle_event(event)
 
-    def update(self):
+    def update(self, win=WIN):
         """
         Draw and display the board after each move.
         """
-        self.board.draw(self.win)
+        self.board.draw(win)
         pygame.display.update()
 
     def change_turn(self):
+        self.turns_counter += 1
         if self.turn == self.player_1:
             self.turn = self.player_2
         else:
             self.turn = self.player_1
-
-    def bot_turn(self) -> bool:
-        """
-        Check whether the current player is a bot
-        """
-        return isinstance(self.turn, Bot)
 
     def move(self, row, col):
         if self.board.you_can_use_this_square(row, col):
@@ -114,17 +108,16 @@ class GameController:
             if not self.winner():
                 self.change_turn()
 
+    def bot_turn(self) -> bool:
+        return isinstance(self.turn, Bot)
+
     def bot_move(self, bot: Bot):
-        """
-        Call and play a bot's next move.
-        """
-        row, col = bot.next_move(self.board)
-        self.move(row, col)
+        self.move(*bot.next_move(self.board, self.turns_counter))
 
     def winner(self) -> str:
         """
         Check whether someone won.
-        Return the winner's name ('self.turn.name'), or 'NO ONE' if the board is full.
+        Return the winner's name, or 'NO ONE' if the board is full.
         """
         winner = self.board.winner()
         return self.turn.name if winner and not isinstance(winner, str) else winner

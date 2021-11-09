@@ -2,23 +2,23 @@ import pygame
 from .colorbox import ColorBox
 from .namebox import NameBox
 from .bot_or_player import TickBot
-from gymkhana.constants import FONT, WIDTH, HEIGHT
+from gymkhana.constants import FONT, WIDTH, HEIGHT, WIN
 
 pygame.init()
 
 
 class InputBox:
-    def __init__(self, win, player: str, num: int, font = FONT, left: int = WIDTH//18, width: int = WIDTH * 9//10, height: int = HEIGHT//4, top: int = HEIGHT//8):
-        self.win = win
+    def __init__(self, num: int, font=FONT, win=WIN, left: int = WIDTH//18, width: int = WIDTH * 9//10, height: int = HEIGHT//4, top: int = HEIGHT//8):
         self.left = left
         self.width = width
         self.height = height
         self.top = top + self.height * (num - 1)
 
+        self.player = "Player " + str(num) + " : "
         self.font = font
 
         self.color_box = ColorBox(
-            self.win,
+            win,
             self.left,
             self.top + self.height // 5,
             self.width * 2 // 3,
@@ -28,7 +28,7 @@ class InputBox:
         self.color = self.color_box.select
 
         self.name_box = NameBox(
-            self.win,
+            win,
             self.left + self.width * 2 // 3,
             self.top + self.height // 4,
             self.width // 3,
@@ -38,7 +38,7 @@ class InputBox:
         )
 
         self.bot_or_player = TickBot(
-            self.win,
+            win,
             self.left + self.width * 4 // 5,
             self.top,
             self.width // 6,
@@ -47,9 +47,7 @@ class InputBox:
             self.font,
         )
 
-        self.player = player
-
-    def draw(self, win, rend=True):
+    def draw(self, win=WIN, rend=True):
         """
         Draw the color box, name box, and "Player 1 :" or "Player 2 :".
         """

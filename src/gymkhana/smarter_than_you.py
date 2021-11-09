@@ -1,9 +1,8 @@
 import random
 import copy
-from gymkhana.constants import ROWS, COLS, ALL_SQUARES
+from gymkhana.constants import ROWS, COLS, TOTAL_SQUARES
 from gymkhana.board import Piece
 from typing import List, Tuple
-
 
 def well_oriented(row: int) -> bool:
     """
@@ -12,156 +11,101 @@ def well_oriented(row: int) -> bool:
     """
     return row % 2 != 0
 
+def get_free_squares(c_board):
+    return[(row, col) for (row, col) in ((row, col) for row in range(ROWS) for col in range(COLS)) if c_board.you_can_use_this_square(row, col)]
+
+def get_pieces_in_same_row(row: int, l_board: list) -> list:
+    return [l_board[row][c] for c in range(COLS - 1) if isinstance(l_board[row][c], Piece)]
+
+def get_pieces_in_same_col(col: int, l_board: list) -> list:
+    return [l_board[r][col] for r in range(ROWS - 1) if isinstance(l_board[r][col], Piece)]
+
+def blocking_continuing_nb(row: int, col: int, l_board: list) -> int:
+    pieces = 0
+    for piece in get_pieces_in_same_col(col, l_board):
+        if piece.player == 1:
+            pieces += 1
+        else:
+            pieces -= 1
+    for piece in get_pieces_in_same_row(row, l_board):
+        if piece.player == 2:
+            pieces += 1
+        else:
+            pieces -= 1
+    return pieces
 
 class Bot:
-    def __init__(self, player, board=None, squares=ALL_SQUARES, free_squares=None):
-        """
-        Initialize a bot by giving it the name and color of a player.
-        """
+    def __init__(self, player):
         self.player = player
         self.num = player.num
         self.color = player.color
         self.name = player.name
 
-        self.board = board
-        self.all_squares = squares
-        self.free_squares = free_squares
-        self.used_squares_number = 0
-
-    def scan_board(self, game_board: List[List]):
-        """
-        Update the 'self.board' variable by checking the current board.
-        """
-        self.board = game_board
-        self.free_squares = [
-            (row, col)
-            for (row, col) in ((row, col) for row in range(ROWS) for col in range(COLS))
-            if self.board.you_can_use_this_square(row, col)
-        ]
-        self.used_squares_number = self.all_squares - len(self.free_squares)
-
-    def pieces_in_same_row(self, row: int) -> list:
-        """
-        :return: A list of all the pieces that are in a given row.
-        """
-        return [
-            self.board.board[row][c]
-            for c in range(COLS - 1)
-            if isinstance(self.board.board[row][c], Piece)
-        ]
-
-    def pieces_in_same_col(self, col: int) -> list:
-        """
-        Return a list of all the pieces that are in a given col.
-        """
-        return [
-            self.board.board[r][col]
-            for r in range(ROWS - 1)
-            if isinstance(self.board.board[r][col], Piece)
-        ]
-
-    def blocking_continuing(self, row: int, col: int) -> int:
-        """
-        Count how many pieces will be either blocked or continued by playing in a given square.
-        """
-        pieces = 0
-        for piece in self.pieces_in_same_col(col):
-            if piece.player == 1:
-                pieces += 1
-            else:
-                pieces -= 1
-        for piece in self.pieces_in_same_row(row):
-            if piece.player == 2:
-                pieces += 1
-            else:
-                pieces -= 1
-        return pieces
-
     def max_blocking_continuing(
-        self, row: int, col: int, well_oriented_moves: List[Tuple]
+        self, row: int, col: int, well_oriented_moves: List[Tuple], l_board: list
     ) -> bool:
-        """
-        Determine whether a given move is one of those with the biggest 'self blocking continuing' score.
-        """
-        return self.blocking_continuing(row, col) == max(
-            [self.blocking_continuing(r, c) for (r, c) in well_oriented_moves]
+        return blocking_continuing_nb(row, col, l_board) == max(
+            [blocking_continuing_nb(r, c, l_board) for (r, c) in well_oriented_moves]
         )
 
-    def winning_move(self, row: int, col: int, board=None) -> bool:
-        """
-        Check whether a given move will make its player win.
-        """
-        board = self.board if not board else board
-        test_board = copy.deepcopy(board)
+    def winning_move(self, row: int, col: int, c_board) -> bool:
+        test_board = copy.deepcopy(c_board)
         test_board.add_piece(row, col, self.num, self.color)
         return test_board.winner()
 
-    def next_winning_move(self, row: int, col: int) -> bool:
-        """
-        Check whether a given move will allow the player to win next turn.
-        """
-        res = False
-        test_board = copy.deepcopy(self.board)
-        test_board.add_piece(row, col, self.num, self.color)
-        free_squares = set(copy.deepcopy(self.free_squares))
-        while free_squares and not res:
-            r, c = free_squares.pop()
-            res = self.winning_move(r, c, test_board)
-        return res
-
-    def adversary_winning_move(self, row: int, col: int) -> bool:
+    def adversary_winning_move(self, row: int, col: int, c_board) -> bool:
         """
         Checks whether a given move will make a player's adversary win.
         """
         num = self.num % 2 + 1
-        test_board = copy.deepcopy(self.board)
+        test_board = copy.deepcopy(c_board)
         if test_board.you_can_use_this_square(row, col):
             test_board.add_piece(row, col, num, self.color)
         return test_board.winner()
 
-    def next_move(self, game_board: List[List]) -> Tuple:
+    def next_move(self, c_board, turns_count) -> Tuple:
         """
-        Figure out the bot next move.
-        Try finding the best possible move by checking different strategies in a specific order.
+        Figure out the bot next move : try to find the best possible move by checking different strategies in a specific order.
         """
         moves = []
-        self.scan_board(game_board)
+        l_board = c_board.board
+        free_squares = get_free_squares(c_board)
 
-        if self.used_squares_number >= 8:
+        if turns_count >= 8:
 
             moves = [
                 (row, col)
-                for (row, col) in self.free_squares
-                if self.winning_move(row, col)
+                for (row, col) in free_squares
+                if self.winning_move(row, col, c_board)
             ]
 
             if not moves:
                 moves = [
                     (row, col)
-                    for (row, col) in self.free_squares
-                    if self.adversary_winning_move(row, col)
+                    for (row, col) in free_squares
+                    if self.adversary_winning_move(row, col, c_board)
                 ]
 
         if not moves:
             well_oriented_moves = [
-                (row, col) for (row, col) in self.free_squares if well_oriented(row)
+                (row, col) for (row, col) in free_squares if well_oriented(row)
             ]
 
             moves = [
                 (row, col)
                 for (row, col) in well_oriented_moves
-                if self.max_blocking_continuing(row, col, well_oriented_moves)
+                if self.max_blocking_continuing(row, col, well_oriented_moves, l_board)
             ]
 
             if not moves:
                 moves = [
                     (row, col)
                     for (row, col) in well_oriented_moves
-                    if self.blocking_continuing(row, col)
+                    if blocking_continuing_nb(row, col, l_board)
                 ]
             if not moves:
                 moves = [
-                    well_oriented_moves if well_oriented_moves else self.free_squares
+                    well_oriented_moves if well_oriented_moves else free_squares
                 ]
 
         move = moves[random.randint(0, len(moves) - 1)] if len(moves) > 1 else moves[0]
