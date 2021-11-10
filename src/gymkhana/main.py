@@ -22,6 +22,8 @@ def main():
 
     while run:
 
+        game_controller.update()
+        
         if game_controller.winner():
             print(game_controller.winner(), "WON")
             run = False
@@ -36,9 +38,8 @@ def main():
         if game_controller.bot_turn():
             game_controller.bot_move(game_controller.turn)
 
-        game_controller.update()
-
     pygame.quit()
+
 
 pygame.init()
 pygame.display.set_caption("Gymkhana")

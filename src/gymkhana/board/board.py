@@ -2,7 +2,6 @@ from gymkhana.board.piece import Piece
 from gymkhana.board.node import Node
 from gymkhana.constants import BG_COLOR, ROWS, COLS, FORBIDDEN_SQUARES
 from typing import Generator, Tuple, List
-
 from gymkhana.player import Player
 
 
@@ -14,13 +13,13 @@ def look_for_connections(node: Node, path: List) -> Generator:
 
 
 class Board:
-    def __init__(self, player_1: Player, player_2: Player):
+    def __init__(self, color_1, color_2):
         self.board = []
-        self.color_1 = player_1.color
-        self.color_2 = player_2.color
-        self.initial_board(self.color_1, self.color_2)
+        self.color_1 = color_1
+        self.color_2 = color_2
+        self.initial_board()
 
-    def initial_board(self, color_1: Tuple, color_2: Tuple):
+    def initial_board(self):
         """
         Create the board as a list of list containing all the squares and what is in them.
         Since it is the beginning of the game, only nodes are added.
@@ -33,16 +32,12 @@ class Board:
                     self.board[row].append(0)
                 else:
                     if row % 2 == 0:
-                        color = color_1
+                        self.board[row].append(Node(row, col, self.color_1))
                     else:
-                        color = color_2
-                    self.board[row].append(Node(row, col, color))
+                        self.board[row].append(Node(row, col, self.color_2))
+                    
 
     def draw(self, win):
-        """
-        Draw all the elements (node or piece) that are on the board.
-        """
-        win.fill(BG_COLOR)
         for row in self.board:
             for square in row:
                 if square != 0:
@@ -73,7 +68,7 @@ class Board:
         node_1.add_connection(node_2.row, node_2.col)
         node_2.add_connection(node_1.row, node_1.col)
 
-    def add_piece(self, row, col, num: int, color: Tuple):
+    def add_piece(self, row, col, num, color):
         piece = Piece(row, col, num, color)
         self.board[row][col] = piece
         self.connect(piece)
