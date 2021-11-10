@@ -1,5 +1,5 @@
 import pygame
-from gymkhana.constants import SQUARE_SIZE, PADDING
+from gymkhana.constants import SQUARE_SIZE, PADDING, COLORS_DICT
 
 
 class Node:
@@ -9,26 +9,17 @@ class Node:
         self.color = color
         self.connections = []
 
-    def draw(self, win):
-        """
-        Draws a given node.
-        :param win: the screen defined in 'game'
-        :return: nothing
-        """
-        radius = SQUARE_SIZE // 4
+    def draw(self, win, sq_size=SQUARE_SIZE, padding=PADDING):
+        radius = sq_size // 4
         pygame.draw.circle(
             win,
             self.color,
-            (SQUARE_SIZE * self.col + PADDING, SQUARE_SIZE * self.row + PADDING),
+            (sq_size * self.col + padding, sq_size * self.row + padding),
             radius,
         )
 
     def add_connection(self, row: int, col: int):
-        """
-        Is called each time a piece is added, on the two nodes that just got connected.
-        :return: updates the 'self.connections' list for a given node.
-        """
         self.connections.append((row, col))
 
-    def __repr__(self):
-        return str(self.color) + " NODE"
+    def __repr__(self, colors_dict=COLORS_DICT):
+        return colors_dict[self.color] + " NODE"
