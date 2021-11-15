@@ -12,6 +12,7 @@ class InputBox:
     def __init__(
         self,
         num: int,
+        color,
         x: int = WIDTH // 18,
         y: int = HEIGHT // 8,
         w: int = WIDTH * 9 // 10,
@@ -45,7 +46,7 @@ class InputBox:
             self.height // 3,
         )
 
-        self.color = self.color_box.select
+        self.color = color
 
     def draw(self, win=WIN):
         """
