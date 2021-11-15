@@ -1,10 +1,9 @@
-from gymkhana.constants import COLORS, FONT
-import random
+from typing import Tuple
+from dataclasses import dataclass
 
-
+@dataclass
 class Player:
-    def __init__(self, num):
-        self.num = num
-        self.color = random.choice(COLORS)
-        self.name = None
-        self.bot = False
+    num: int
+    color: Tuple
+    name: str
+    bot: bool

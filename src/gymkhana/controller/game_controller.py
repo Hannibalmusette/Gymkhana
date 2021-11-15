@@ -1,9 +1,8 @@
 import pygame
-from gymkhana.player import Player
 from gymkhana.choices import choices
 from gymkhana.board import Board
-from gymkhana.smarter_than_you import Bot
-from gymkhana.constants import WIN, BG_COLOR, WRITING_COLOR, WIDTH, HEIGHT, FONT
+from gymkhana.smarter_than_you import next_move
+from gymkhana.constants import WIN, BG_COLOR
 
 
 class GameController:
@@ -15,11 +14,6 @@ class GameController:
 
         # Initialize the board
         self.board = Board(self.player_1.color, self.player_2.color)
-
-        if self.player_1.bot:
-            self.player_1 = Bot(self.player_1)
-        if self.player_2.bot:
-            self.player_2 = Bot(self.player_2)
 
         self.turn = self.player_1
 
@@ -37,10 +31,10 @@ class GameController:
                 self.change_turn()
 
     def bot_turn(self) -> bool:
-        return isinstance(self.turn, Bot)
+        return self.turn.bot
 
-    def bot_move(self, bot: Bot):
-        self.move(*bot.next_move(self.turns_counter, self.board))
+    def bot_move(self):
+        self.move(*next_move(self.turns_counter, self.board, self.turn.num, self.turn.color))
 
     def winner(self) -> str:
         winner = self.board.winner()

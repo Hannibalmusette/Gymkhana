@@ -1,6 +1,6 @@
 import pygame
-from gymkhana.constants import SQUARE_SIZE
-from gymkhana.controller import GameController
+from constants import SQUARE_SIZE
+from controller import GameController
 from typing import Tuple
 
 
@@ -36,7 +36,7 @@ def main():
                 game_controller.move(*get_square_from_mouse(pygame.mouse.get_pos()))
 
         if game_controller.bot_turn():
-            game_controller.bot_move(game_controller.turn)
+            game_controller.bot_move()
 
     pygame.quit()
 
