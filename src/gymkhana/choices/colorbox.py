@@ -7,12 +7,12 @@ pygame.init()
 
 
 class ColorBox:
-    def __init__(self, x: int, y: int, w: int, h: int, colors=COLORS):
+    def __init__(self, color, x: int, y: int, w: int, h: int, colors=COLORS):
         self.left, self.top, self.width, self.height = x, y, w, h
-        self.colors = colors
+        self.select = color
         self.radius = self.width // len(colors) // 2.3
-        self.select = self.colors[random.randint(0, len(colors) - 1)]
         self.circles = []
+        self.colors = colors
 
     def draw_circle(self, color: Tuple, n: int, select=None, win=WIN):
         radius = self.radius

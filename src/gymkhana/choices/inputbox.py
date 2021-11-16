@@ -24,6 +24,7 @@ class InputBox:
         self.top = y + h * (self.num - 1)
         self.width = w
         self.height = h
+        self.color = color
         
         self.name_box = NameBox(
             self.left + self.width * 2 // 3,
@@ -40,13 +41,14 @@ class InputBox:
         )
 
         self.color_box = ColorBox(
+            self.color,
             self.left,
             self.top + self.height // 5,
             self.width * 2 // 3,
             self.height // 3,
         )
 
-        self.color = color
+        
 
     def draw(self, win=WIN):
         """
