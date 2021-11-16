@@ -2,7 +2,6 @@ from gymkhana.board.piece import Piece
 from gymkhana.board.node import Node
 from gymkhana.constants import BG_COLOR, ROWS, COLS, FORBIDDEN_SQUARES
 from typing import Generator, Tuple, List
-from gymkhana.player import Player
 
 
 def look_for_connections(node: Node, path: List) -> Generator:

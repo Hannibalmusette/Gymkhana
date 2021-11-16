@@ -2,7 +2,6 @@ import pygame
 import random
 from .write_text import write_text
 from .inputbox import InputBox
-from gymkhana.player import Player
 from gymkhana.constants import WIDTH, HEIGHT, WIN, WRITING_COLOR, BG_COLOR, COLORS
 
 pygame.init()
@@ -20,15 +19,10 @@ def make_rect(x, y, w, h):
 def draw_rect(rect, color=WRITING_COLOR, win=WIN):
     pygame.draw.rect(win, color, rect, 2)
 
-def is_ready(event, button) -> bool:
+def button_clicked(event, button) -> bool:
     return event.type == pygame.MOUSEBUTTONDOWN and button.collidepoint(
         event.pos
     )
-
-def update_choices(inputbox, event):
-    (color, name, bot) = inputbox.handle_event(event)
-    return color, name, bot
-
 
 def choices(win=WIN, bgcolor=BG_COLOR, width=WIDTH, height=HEIGHT):
     color_1, color_2 = random_colors()
@@ -56,12 +50,10 @@ def choices(win=WIN, bgcolor=BG_COLOR, width=WIDTH, height=HEIGHT):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-            elif is_ready(event, ready_button) and color_1 != color_2:
+            elif button_clicked(event, ready_button) and color_1 != color_2:
                 done = True
             else:
-                (color_1, name_1, bot_1) = update_choices(input_box_1, event)
-                (color_2, name_2, bot_2) = update_choices(input_box_2, event)
+                choices_1 = input_box_1.handle_event(event)
+                choices_2 = input_box_2.handle_event(event)
 
-        player_1 = Player(1, color_1, name_1, bot_1)
-        player_2 = Player(2, color_2, name_2, bot_2)
-    return player_1, player_2
+    return choices_1, choices_2

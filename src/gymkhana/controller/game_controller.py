@@ -1,16 +1,26 @@
 import pygame
+from typing import Tuple
+from dataclasses import dataclass
 from gymkhana.choices import choices
 from gymkhana.board import Board
 from gymkhana.smarter_than_you import next_move
 from gymkhana.constants import WIN, BG_COLOR
 
+@dataclass
+class Player:
+    num: int
+    color: Tuple
+    name: str
+    bot: bool
 
 class GameController:
     def __init__(self):
         self.turns_counter = 0
 
         # Initialize two players and allow them to choose their color, name and whether they are a bot.
-        self.player_1, self.player_2 = choices()
+        player_1, player_2 = choices()
+        self.player_1 = Player(1, *player_1)
+        self.player_2 = Player(2, *player_2)
 
         # Initialize the board
         self.board = Board(self.player_1.color, self.player_2.color)
