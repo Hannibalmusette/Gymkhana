@@ -1,5 +1,12 @@
 import pygame
-from gymkhana.constants import SQUARE_SIZE, PADDING, PIECE_LEN, PIECE_LAR, COLORS_DICT, WHITE
+from gymkhana.constants import (
+    SQUARE_SIZE,
+    PADDING,
+    PIECE_LEN,
+    PIECE_LAR,
+    COLORS_DICT,
+    WHITE,
+)
 from typing import Tuple
 
 

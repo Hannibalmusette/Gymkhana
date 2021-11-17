@@ -1,5 +1,4 @@
 import pygame
-import random
 from gymkhana.constants import COLORS, WHITE, WIN
 from typing import Tuple
 
@@ -7,43 +6,34 @@ pygame.init()
 
 
 class ColorBox:
-    def __init__(self, x: int, y: int, w: int, h: int, colors=COLORS):
+    def __init__(self, color, x: int, y: int, w: int, h: int, colors=COLORS):
         self.left, self.top, self.width, self.height = x, y, w, h
-        self.colors = colors
-        self.radius = self.width // len(colors) // 2.3
-        self.select = self.colors[random.randint(0, len(colors) - 1)]
-        self.circles = []
+        self.select = color
+        self.radius = int(self.width // len(colors) // 2.3)
+        self.circles = {
+            self.circle_coord(n + 1): color for n, color in enumerate(colors)
+        }
 
-    def draw_circle(self, color: Tuple, n: int, select=None, win=WIN):
-        radius = self.radius
-        x = radius * n * 2.3
+    def circle_coord(self, n: int):
+        x = self.radius * n * 2.3
         y = self.top + self.height // 2
-        if select:
-            radius += 2
-        pygame.draw.circle(
-            win,
-            color,
-            (x, y),
-            radius,
-        )
-        return (x, y), color
+        return int(x), int(y)
 
-    def update_list(self, circle):
-        self.circles.append(circle)
+    def draw_circle(self, color: Tuple, coord, select=False, win=WIN):
+        radius = self.radius + 2 if select else self.radius
+        pygame.draw.circle(win, color, coord, radius)
 
     def draw_circles(self, highlight_color=WHITE):
-        n = 0
-        for color in self.colors:
-            n += 1
-            if color == self.select:
-                self.draw_circle(highlight_color, n, select=True)
-            circle = self.draw_circle(color, n)
-            self.update_list(circle)
+        for circle in self.circles:
+            if self.circles[circle] == self.select:
+                self.draw_circle(highlight_color, circle, select=True)
+            self.draw_circle(self.circles[circle], circle)
 
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             x1, y1 = event.pos
             for circle in self.circles:
-                x2, y2 = circle[0]
-                if (x1 - x2) ** 2 + (y1 - y2) ** 2 < self.radius ** 2:
-                    self.select = circle[1]
+                x, y = circle
+                if (x1 - x) ** 2 + (y1 - y) ** 2 < self.radius ** 2:
+                    self.select = self.circles[circle]
+                    break

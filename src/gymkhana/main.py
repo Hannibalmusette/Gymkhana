@@ -18,15 +18,15 @@ def main():
     Run the game while it has to, i.e. there is no winner and no one closed the game windows.
     """
     run = True
+    winner = False
     game_controller = GameController()
 
     while run:
 
         game_controller.update()
-        
+
         if game_controller.winner():
-            print(game_controller.winner(), "WON")
-            run = False
+            winner = True
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -35,7 +35,7 @@ def main():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 game_controller.move(*get_square_from_mouse(pygame.mouse.get_pos()))
 
-        if game_controller.bot_turn():
+        if not winner and game_controller.bot_turn():
             game_controller.bot_move()
 
     pygame.quit()

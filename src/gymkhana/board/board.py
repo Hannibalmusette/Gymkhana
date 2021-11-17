@@ -1,6 +1,6 @@
 from gymkhana.board.piece import Piece
 from gymkhana.board.node import Node
-from gymkhana.constants import BG_COLOR, ROWS, COLS, FORBIDDEN_SQUARES
+from gymkhana.constants import ROWS, COLS, FORBIDDEN_SQUARES
 from typing import Generator, Tuple, List
 
 
@@ -12,11 +12,15 @@ def look_for_connections(node: Node, path: List) -> Generator:
 
 
 class Board:
-    def __init__(self, color_1, color_2):
+    def __init__(self, color_1: Tuple, color_2: Tuple):
         self.board = []
         self.color_1 = color_1
         self.color_2 = color_2
         self.initial_board()
+        self.init_free_squares = (
+            len([square for row in self.board for square in row])
+            - len(FORBIDDEN_SQUARES)
+        ) // 2 + 1
 
     def initial_board(self):
         """
@@ -34,7 +38,6 @@ class Board:
                         self.board[row].append(Node(row, col, self.color_1))
                     else:
                         self.board[row].append(Node(row, col, self.color_2))
-                    
 
     def draw(self, win):
         for row in self.board:
@@ -67,19 +70,10 @@ class Board:
         node_1.add_connection(node_2.row, node_2.col)
         node_2.add_connection(node_1.row, node_1.col)
 
-    def add_piece(self, row, col, num, color):
+    def add_piece(self, row: int, col: int, num: int, color: Tuple):
         piece = Piece(row, col, num, color)
         self.board[row][col] = piece
         self.connect(piece)
-
-    def count_empty_squares(self) -> int:
-        """
-        Check how many free squares are left.
-        """
-        return (
-            len([square for row in self.board for square in row if square == 0])
-            - len(FORBIDDEN_SQUARES) // 2
-        )
 
     def winning_path(self, path: List):
         """
@@ -101,10 +95,11 @@ class Board:
             for col in range(COLS):
                 if (col == 0 or row == 0) and isinstance(self.board[row][col], Node):
                     path = [(row, col)]
-                    if self.count_empty_squares() == 0:
-                        winner = "NO ONE"
-                        break
-                    elif self.winning_path(path):
+                    if self.winning_path(path):
                         winner = True
                         break
         return winner
+
+    def losers(self, turns_count):
+        if self.init_free_squares - turns_count == 0:
+            return "NO ONE"

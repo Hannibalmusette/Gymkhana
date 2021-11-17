@@ -2,10 +2,10 @@ import pygame
 
 pygame.init()
 
-WIDTH, HEIGHT = 550, 550
+WIDTH, HEIGHT = 600, 600
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 ROWS, COLS = 11, 11
-SQUARE_SIZE = WIDTH // COLS
+SQUARE_SIZE = (WIDTH - 50) // COLS
 FORBIDDEN_SQUARES = (
     {(x, 0) for x in range(ROWS)}
     | {(0, y) for y in range(COLS)}
