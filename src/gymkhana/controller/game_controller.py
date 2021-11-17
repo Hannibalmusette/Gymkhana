@@ -74,10 +74,10 @@ class GameController:
             self.player_2.color,
             ((bas_j, bas_i_1), (bas_j, bas_i_2), (som_j, som_i)),
         )
-        write_text("1", som_j, bas_j, 20, 20, color=WHITE)
-        write_text("2", bas_j, som_j, 20, 20, color=WHITE, rotate=True)
+        write_text("1", som_j, bas_j, margin//2.5, margin//2.5, color=WHITE)
+        write_text("2", bas_j, som_j, margin//2.5, margin//2.5, color=WHITE, rotate=True)
         write_text(
-            self.player_1.name, bas_i_2, margin // 3, 30, 30, color=self.player_1.color
+            self.player_1.name, bas_i_2, margin // 3, margin//1.5, margin//1.5, color=self.player_1.color
         )
         write_text(
             self.player_2.name,
