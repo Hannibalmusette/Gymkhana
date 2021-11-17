@@ -1,11 +1,14 @@
-import pygame
-from constants import SQUARE_SIZE
-from controller import GameController
 from typing import Tuple
 
+import pygame
+from constants import MARGIN, SQUARE_SIZE
+from controller import GameController
 
-def get_square_from_mouse(pos: Tuple, sq_size=SQUARE_SIZE) -> Tuple:
+
+def get_square_from_mouse(pos: Tuple, sq_size=SQUARE_SIZE, margin=MARGIN) -> Tuple:
     x, y = pos
+    x -= margin
+    y -= margin
     row = y // sq_size
     col = x // sq_size
     if row % 2 != col % 2:

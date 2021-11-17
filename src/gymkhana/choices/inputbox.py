@@ -1,9 +1,11 @@
 import pygame
+
+from gymkhana.constants import HEIGHT, WIDTH, WIN
+
+from .bot_or_player import TickBot
 from .colorbox import ColorBox
 from .namebox import NameBox
-from .bot_or_player import TickBot
 from .write_text import write_text
-from gymkhana.constants import WIDTH, HEIGHT, WIN
 
 pygame.init()
 

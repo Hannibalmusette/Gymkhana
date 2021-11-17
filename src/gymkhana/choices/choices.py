@@ -1,8 +1,12 @@
-import pygame
 import random
-from .write_text import write_text
+
+import pygame
+
+from gymkhana.constants import (BG_COLOR, COLORS, HEIGHT, WIDTH, WIN,
+                                WRITING_COLOR)
+
 from .inputbox import InputBox
-from gymkhana.constants import WIDTH, HEIGHT, WIN, WRITING_COLOR, BG_COLOR, COLORS
+from .write_text import write_text
 
 pygame.init()
 

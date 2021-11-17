@@ -1,9 +1,10 @@
-import random
 import copy
-from gymkhana.board.board import Board
-from gymkhana.constants import ROWS, COLS
-from gymkhana.board import Piece
+import random
 from typing import List, Tuple
+
+from gymkhana.board import Piece
+from gymkhana.board.board import Board
+from gymkhana.constants import COLS, ROWS
 
 
 def get_free_squares(c_board: Board):

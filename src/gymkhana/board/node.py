@@ -1,5 +1,6 @@
 import pygame
-from gymkhana.constants import SQUARE_SIZE, PADDING, COLORS_DICT
+
+from gymkhana.constants import COLORS_DICT, MARGIN, PADDING, SQUARE_SIZE
 
 
 class Node:
@@ -9,12 +10,15 @@ class Node:
         self.color = color
         self.connections = []
 
-    def draw(self, win, sq_size=SQUARE_SIZE, padding=PADDING):
+    def draw(self, win, sq_size=SQUARE_SIZE, padding=PADDING, margin=MARGIN):
         radius = sq_size // 4
         pygame.draw.circle(
             win,
             self.color,
-            (sq_size * self.col + padding, sq_size * self.row + padding),
+            (
+                sq_size * self.col + padding + margin,
+                sq_size * self.row + padding + margin,
+            ),
             radius,
         )
 

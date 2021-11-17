@@ -1,6 +1,8 @@
-import pygame
-from gymkhana.constants import COLORS, WHITE, WIN
 from typing import Tuple
+
+import pygame
+
+from gymkhana.constants import COLORS, WHITE, WIN
 
 pygame.init()
 

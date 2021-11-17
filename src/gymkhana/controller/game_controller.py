@@ -1,11 +1,14 @@
-import pygame
-from typing import Tuple
 from dataclasses import dataclass
-from gymkhana.choices import choices, write_text
+from typing import Tuple
+
+import pygame
+
 from gymkhana.board import Board
-from gymkhana.constants.constants import SQUARE_SIZE, WHITE, WIDTH, HEIGHT
+from gymkhana.choices import choices, write_text
+from gymkhana.constants import BG_COLOR, WIN
+from gymkhana.constants.constants import (HEIGHT, MARGIN, SQUARE_SIZE, WHITE,
+                                          WIDTH)
 from gymkhana.smarter_than_you import next_move
-from gymkhana.constants import WIN, BG_COLOR
 
 
 @dataclass
@@ -53,29 +56,37 @@ class GameController:
 
     def winner(self) -> str:
         winner = self.board.winner()
-        losers = self.board.losers(self.turns_counter)
-        return self.turn.name if winner else losers
+        return winner if winner else self.board.losers(self.turns_counter)
 
-    def player_and_triangle(self, win):
-        i_max = HEIGHT - 50
-        i_min = 490
-        i_mid_min = 500
-        i_mid_max = 510
+    def player_and_triangle(self, win, margin=MARGIN):
+        som_j = margin * 1.8
+        som_i = margin * 2
+        bas_j = margin
+        bas_i_1 = som_j
+        bas_i_2 = margin * 2.2
         pygame.draw.polygon(
             win,
             self.player_1.color,
-            ((i_mid_min, i_mid_max), (i_min, i_max), (i_mid_max, i_max)),
+            ((bas_i_1, bas_j), (bas_i_2, bas_j), (som_i, som_j)),
         )
         pygame.draw.polygon(
             win,
             self.player_2.color,
-            ((i_mid_max, i_mid_min), (i_max, i_min), (i_max, i_mid_max)),
+            ((bas_j, bas_i_1), (bas_j, bas_i_2), (som_j, som_i)),
         )
-        write_text("1", 490, 530, 20, 20, color=WHITE)
-        write_text("2", 530, 490, 20, 20, color=WHITE, rotate=True)
-        write_text(self.player_1.name, 480, 550, 30, 30, color=self.player_1.color)
+        write_text("1", som_j, bas_j, 20, 20, color=WHITE)
+        write_text("2", bas_j, som_j, 20, 20, color=WHITE, rotate=True)
         write_text(
-            self.player_2.name, 550, 480, 30, 30, color=self.player_2.color, rotate=True
+            self.player_1.name, bas_i_2, margin // 2, 30, 30, color=self.player_1.color
+        )
+        write_text(
+            self.player_2.name,
+            margin // 2,
+            bas_i_2,
+            30,
+            30,
+            color=self.player_2.color,
+            rotate=True,
         )
 
     def update(self, win=WIN, bg_color=BG_COLOR):

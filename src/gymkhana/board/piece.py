@@ -1,13 +1,9 @@
-import pygame
-from gymkhana.constants import (
-    SQUARE_SIZE,
-    PADDING,
-    PIECE_LEN,
-    PIECE_LAR,
-    COLORS_DICT,
-    WHITE,
-)
 from typing import Tuple
+
+import pygame
+
+from gymkhana.constants import (COLORS_DICT, MARGIN, PADDING, PIECE_LAR,
+                                PIECE_LEN, SQUARE_SIZE)
 
 
 class Piece:
@@ -25,8 +21,10 @@ class Piece:
     def calc_size(self, le: int = PIECE_LEN, la: int = PIECE_LAR) -> Tuple:
         return (le, la) if self.is_horizontal() else (la, le)
 
-    def calc_pos(self, roworcol, leorla, sq_size=SQUARE_SIZE, padding=PADDING) -> int:
-        return (sq_size * roworcol) + padding - leorla / 2
+    def calc_pos(
+        self, roworcol, leorla, sq_size=SQUARE_SIZE, padding=PADDING, margin=MARGIN
+    ) -> int:
+        return (sq_size * roworcol) + padding - leorla / 2 + margin
 
     def calc_param(self):
         w, h = self.calc_size()
