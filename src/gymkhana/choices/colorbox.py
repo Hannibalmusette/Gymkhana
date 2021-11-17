@@ -16,7 +16,7 @@ class ColorBox:
             self.circle_coord(n + 1): color for n, color in enumerate(colors)
         }
 
-    def circle_coord(self, n: int):
+    def circle_coord(self, n: int) -> Tuple[int]:
         x = self.radius * n * 2.3
         y = self.top + self.height // 2
         return int(x), int(y)

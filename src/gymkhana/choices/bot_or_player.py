@@ -1,3 +1,5 @@
+from typing import Tuple
+
 import pygame
 
 from .write_text import write_text
@@ -12,7 +14,7 @@ class TickBot:
         self.radius = self.height // 2
         self.bot = False
 
-    def draw(self, win, color):
+    def draw(self, win, color: Tuple):
         pygame.draw.rect(win, color, self.rect, 2)
         write_text("Bot", self.left, self.top, self.width, self.height, color=color)
         if self.bot:

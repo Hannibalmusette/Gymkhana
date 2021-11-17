@@ -1,10 +1,12 @@
+from typing import Tuple
+
 import pygame
 
 from gymkhana.constants import COLORS_DICT, MARGIN, PADDING, SQUARE_SIZE
 
 
 class Node:
-    def __init__(self, row, col, color):
+    def __init__(self, row: int, col: int, color: Tuple):
         self.row = row
         self.col = col
         self.color = color
