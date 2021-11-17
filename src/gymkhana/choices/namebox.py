@@ -1,6 +1,6 @@
 import pygame
+
 from .write_text import write_text
-from typing import Tuple
 
 pygame.init()
 

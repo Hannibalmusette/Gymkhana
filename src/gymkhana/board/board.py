@@ -1,7 +1,8 @@
-from gymkhana.board.piece import Piece
+from typing import Generator, List, Tuple
+
 from gymkhana.board.node import Node
-from gymkhana.constants import ROWS, COLS, FORBIDDEN_SQUARES
-from typing import Generator, Tuple, List
+from gymkhana.board.piece import Piece
+from gymkhana.constants import COLS, FORBIDDEN_SQUARES, ROWS
 
 
 def look_for_connections(node: Node, path: List) -> Generator:
