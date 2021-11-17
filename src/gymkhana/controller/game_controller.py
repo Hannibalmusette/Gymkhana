@@ -52,8 +52,9 @@ class GameController:
         )
 
     def winner(self) -> str:
-        winner = self.board.winner(self.turns_counter)
-        return self.turn.name if winner and not isinstance(winner, str) else winner
+        winner = self.board.winner()
+        losers = self.board.losers(self.turns_counter)
+        return self.turn.name if winner else losers
 
     def player_and_triangle(self, win):
         i_max = HEIGHT - 50

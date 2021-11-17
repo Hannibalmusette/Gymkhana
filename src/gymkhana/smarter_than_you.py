@@ -14,10 +14,18 @@ def get_free_squares(c_board: Board):
     ]
 
 
-def winning_move(row: int, col: int, c_board: Board, num, color, turns_count) -> bool:
+def winning_move(row: int, col: int, c_board: Board, num, color) -> bool:
     test_board = copy.deepcopy(c_board)
     test_board.add_piece(row, col, num, color)
-    return test_board.winner(turns_count)
+    return test_board.winner()
+
+
+def winning_moves_list(c_board, free_squares, num, color):
+    return [
+        (row, col)
+        for (row, col) in free_squares
+        if winning_move(row, col, c_board, num, color)
+    ]
 
 
 def well_oriented(row: int) -> bool:
@@ -59,38 +67,34 @@ def max_blocking_continuing(
     )
 
 
-def strategies(free_squares: List[Tuple], c_board: Board):
+def strategies(free_squares: List[Tuple], c_board: Board, turns_count, num, color):
+    if turns_count >= 8:
+        winning_moves = winning_moves_list(c_board, free_squares, num, color)
+        yield winning_moves
+
+        blocking_moves = winning_moves_list(c_board, free_squares, num % 2 + 1, color)
+        yield blocking_moves
+
     well_oriented_moves = [
         (row, col) for (row, col) in free_squares if well_oriented(row)
     ]
     l_board = c_board.board
 
-    yield [
+    block_continue = [
         (row, col)
         for (row, col) in well_oriented_moves
         if max_blocking_continuing(row, col, well_oriented_moves, l_board)
     ]
-    yield well_oriented_moves if well_oriented_moves else free_squares
+    yield block_continue
+    yield well_oriented_moves
+    yield free_squares
 
 
 def next_move(turns_count, c_board, num, color) -> Tuple[int]:
     moves = []
     free_squares = get_free_squares(c_board)
-
-    if turns_count >= 8:
-        moves = [
-            (row, col)
-            for (row, col) in free_squares
-            if winning_move(row, col, c_board, num, color, turns_count)
-        ]
-        if not moves:
-            moves = [
-                (row, col)
-                for (row, col) in free_squares
-                if winning_move(row, col, c_board, num % 2 + 1, color, turns_count)
-            ]
-
-    while not moves:
-        moves = next(strategies(free_squares, c_board))
-    move = random.choice(moves)
-    return move
+    for strategy in strategies(free_squares, c_board, turns_count, num, color):
+        if strategy:
+            moves = strategy
+            break
+    return random.choice(moves)

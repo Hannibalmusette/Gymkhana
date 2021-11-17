@@ -86,7 +86,7 @@ class Board:
             node = self.board[row][col]
             path.extend(look_for_connections(node, path))
 
-    def winner(self, turns_count):
+    def winner(self):
         """
         Check if there is a winner.
         """
@@ -98,6 +98,8 @@ class Board:
                     if self.winning_path(path):
                         winner = True
                         break
-        if self.init_free_squares - turns_count == 0:
-            winner = "NO ONE"
         return winner
+
+    def losers(self, turns_count):
+        if self.init_free_squares - turns_count == 0:
+            return "NO ONE"
