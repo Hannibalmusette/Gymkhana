@@ -13,14 +13,17 @@ class NameBox:
 
     def draw(self, win, color):
         pygame.draw.rect(win, color, self.rect, 2)
-        write_text(self.text, self.rect.x, self.rect.y, self.rect.w, self.rect.h, color=color)
-        
+        write_text(
+            self.text, self.rect.x, self.rect.y, self.rect.w, self.rect.h, color=color
+        )
 
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(event.pos):
             self.text = ""
             self.active = True
-        elif event.type == pygame.MOUSEBUTTONDOWN and not self.rect.collidepoint(event.pos):
+        elif event.type == pygame.MOUSEBUTTONDOWN and not self.rect.collidepoint(
+            event.pos
+        ):
             self.active = False
 
         if event.type == pygame.KEYDOWN and self.active:
