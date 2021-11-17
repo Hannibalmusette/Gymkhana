@@ -1,3 +1,5 @@
+from typing import Tuple
+
 import pygame
 
 from gymkhana.constants import HEIGHT, WIDTH, WIN
@@ -62,7 +64,7 @@ class InputBox:
         self.name_box.draw(win, self.color)
         self.color_box.draw_circles()
 
-    def handle_event(self, event):
+    def handle_event(self, event) -> Tuple:
         self.color_box.handle_event(event)
         self.name_box.handle_event(event)
         self.bot_or_player.handle_event(event)

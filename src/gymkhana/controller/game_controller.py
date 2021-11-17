@@ -40,7 +40,7 @@ class GameController:
         else:
             self.turn = self.player_1
 
-    def move(self, row, col):
+    def move(self, row: int, col: int):
         if self.board.you_can_use_this_square(row, col):
             self.board.add_piece(row, col, self.turn.num, self.turn.color)
             if not self.winner():
@@ -56,7 +56,7 @@ class GameController:
 
     def winner(self) -> str:
         winner = self.board.winner()
-        return winner if winner else self.board.losers(self.turns_counter)
+        return self.turn.name if winner else self.board.losers(self.turns_counter)
 
     def player_and_triangle(self, win, margin=MARGIN):
         som_j = margin * 1.8
@@ -74,14 +74,21 @@ class GameController:
             self.player_2.color,
             ((bas_j, bas_i_1), (bas_j, bas_i_2), (som_j, som_i)),
         )
-        write_text("1", som_j, bas_j, 20, 20, color=WHITE)
-        write_text("2", bas_j, som_j, 20, 20, color=WHITE, rotate=True)
+        write_text("1", som_j, bas_j, margin // 2.5, margin // 2.5, color=WHITE)
         write_text(
-            self.player_1.name, bas_i_2, margin // 2, 30, 30, color=self.player_1.color
+            "2", bas_j, som_j, margin // 2.5, margin // 2.5, color=WHITE, rotate=True
+        )
+        write_text(
+            self.player_1.name,
+            bas_i_2,
+            margin // 3,
+            margin // 1.5,
+            margin // 1.5,
+            color=self.player_1.color,
         )
         write_text(
             self.player_2.name,
-            margin // 2,
+            margin // 3,
             bas_i_2,
             30,
             30,
@@ -89,7 +96,7 @@ class GameController:
             rotate=True,
         )
 
-    def update(self, win=WIN, bg_color=BG_COLOR):
+    def update(self, win: pygame.Surface = WIN, bg_color: Tuple = BG_COLOR):
         win.fill(bg_color)
         if self.winner():
             winner_txt = self.winner() + " WON !"

@@ -1,13 +1,13 @@
 import copy
 import random
-from typing import List, Tuple
+from typing import Generator, List, Tuple
 
 from gymkhana.board import Piece
 from gymkhana.board.board import Board
 from gymkhana.constants import COLS, ROWS
 
 
-def get_free_squares(c_board: Board):
+def get_free_squares(c_board: Board) -> List[Tuple]:
     return [
         (row, col)
         for (row, col) in ((row, col) for row in range(ROWS) for col in range(COLS))
@@ -21,7 +21,9 @@ def winning_move(row: int, col: int, c_board: Board, num, color) -> bool:
     return test_board.winner()
 
 
-def winning_moves_list(c_board, free_squares, num, color):
+def winning_moves_list(
+    c_board: Board, free_squares: List[Tuple], num: int, color: Tuple
+) -> List[Tuple]:
     return [
         (row, col)
         for (row, col) in free_squares
@@ -68,7 +70,9 @@ def max_blocking_continuing(
     )
 
 
-def strategies(free_squares: List[Tuple], c_board: Board, turns_count, num, color):
+def strategies(
+    free_squares: List[Tuple], c_board: Board, turns_count: int, num: int, color: Tuple
+) -> Generator:
     if turns_count >= 8:
         winning_moves = winning_moves_list(c_board, free_squares, num, color)
         yield winning_moves
@@ -91,7 +95,7 @@ def strategies(free_squares: List[Tuple], c_board: Board, turns_count, num, colo
     yield free_squares
 
 
-def next_move(turns_count, c_board, num, color) -> Tuple[int]:
+def next_move(turns_count: int, c_board: Board, num: int, color: Tuple) -> Tuple[int]:
     moves = []
     free_squares = get_free_squares(c_board)
     for strategy in strategies(free_squares, c_board, turns_count, num, color):

@@ -1,14 +1,13 @@
 from typing import Generator, List, Tuple
 
+from pygame import Surface
+
 from gymkhana.board.node import Node
 from gymkhana.board.piece import Piece
 from gymkhana.constants import COLS, FORBIDDEN_SQUARES, ROWS
 
 
 def look_for_connections(node: Node, path: List) -> Generator:
-    """
-    For a given node, look for connections that are not in its path.
-    """
     return (connection for connection in node.connections if connection not in path)
 
 
@@ -24,11 +23,6 @@ class Board:
         ) // 2 + 1
 
     def initial_board(self):
-        """
-        Create the board as a list of list containing all the squares and what is in them.
-        Since it is the beginning of the game, only nodes are added.
-        All the squares that might contain pieces later get the value '0'
-        """
         for row in range(ROWS):
             self.board.append([])
             for col in range(COLS):
@@ -40,7 +34,7 @@ class Board:
                     else:
                         self.board[row].append(Node(row, col, self.color_2))
 
-    def draw(self, win):
+    def draw(self, win: Surface):
         for row in self.board:
             for square in row:
                 if square != 0:

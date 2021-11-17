@@ -5,10 +5,10 @@ from gymkhana.constants import FONT, WIN, WRITING_COLOR
 
 def write_text(
     txt: str,
-    x,
-    y,
-    w,
-    h,
+    x: int,
+    y: int,
+    w: int,
+    h: int,
     rotate=False,
     rend=True,
     font=FONT,

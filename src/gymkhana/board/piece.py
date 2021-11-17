@@ -7,7 +7,7 @@ from gymkhana.constants import (COLORS_DICT, MARGIN, PADDING, PIECE_LAR,
 
 
 class Piece:
-    def __init__(self, row: int, col: int, num, color):
+    def __init__(self, row: int, col: int, num: int, color: Tuple):
         self.row = row
         self.col = col
         self.player_num = num

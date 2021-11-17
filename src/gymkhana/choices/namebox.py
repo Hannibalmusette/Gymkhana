@@ -6,7 +6,7 @@ pygame.init()
 
 
 class NameBox:
-    def __init__(self, x, y, w, h):
+    def __init__(self, x: int, y: int, w: int, h: int):
         self.active = False
         self.text = "Enter name"
         self.rect = pygame.Rect(x, y, w, h)
