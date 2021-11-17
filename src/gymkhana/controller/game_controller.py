@@ -56,7 +56,7 @@ class GameController:
 
     def winner(self) -> str:
         winner = self.board.winner()
-        return winner if winner else self.board.losers(self.turns_counter)
+        return self.turn.name if winner else self.board.losers(self.turns_counter)
 
     def player_and_triangle(self, win, margin=MARGIN):
         som_j = margin * 1.8
