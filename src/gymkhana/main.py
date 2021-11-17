@@ -7,10 +7,7 @@ from controller import GameController
 
 def get_square_from_mouse(pos: Tuple, sq_size=SQUARE_SIZE, margin=MARGIN) -> Tuple:
     x, y = pos
-    x -= margin
-    y -= margin
-    row = y // sq_size
-    col = x // sq_size
+    row, col = (y - margin) // sq_size, (x - margin) // sq_size
     if row % 2 != col % 2:
         row, col = 0, 0
     return row, col

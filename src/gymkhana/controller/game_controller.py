@@ -77,11 +77,11 @@ class GameController:
         write_text("1", som_j, bas_j, 20, 20, color=WHITE)
         write_text("2", bas_j, som_j, 20, 20, color=WHITE, rotate=True)
         write_text(
-            self.player_1.name, bas_i_2, margin // 2, 30, 30, color=self.player_1.color
+            self.player_1.name, bas_i_2, margin // 3, 30, 30, color=self.player_1.color
         )
         write_text(
             self.player_2.name,
-            margin // 2,
+            margin // 3,
             bas_i_2,
             30,
             30,
