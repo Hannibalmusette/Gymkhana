@@ -3,7 +3,7 @@ from typing import Tuple
 
 import pygame
 
-from gymkhana.board import Board
+from gymkhana.board import Board, player_and_triangle
 from gymkhana.choices import choices, write_text
 from gymkhana.constants import BG_COLOR, WIN
 from gymkhana.constants.constants import (HEIGHT, MARGIN, SQUARE_SIZE, WHITE,
@@ -58,43 +58,7 @@ class GameController:
         winner = self.board.winner()
         return self.turn.name if winner else self.board.losers(self.turns_counter)
 
-    def player_and_triangle(self, win, margin=MARGIN):
-        som_j = margin * 1.8
-        som_i = margin * 2
-        bas_j = margin
-        bas_i_1 = som_j
-        bas_i_2 = margin * 2.2
-        pygame.draw.polygon(
-            win,
-            self.player_1.color,
-            ((bas_i_1, bas_j), (bas_i_2, bas_j), (som_i, som_j)),
-        )
-        pygame.draw.polygon(
-            win,
-            self.player_2.color,
-            ((bas_j, bas_i_1), (bas_j, bas_i_2), (som_j, som_i)),
-        )
-        write_text("1", som_j, bas_j, margin // 2.5, margin // 2.5, color=WHITE)
-        write_text(
-            "2", bas_j, som_j, margin // 2.5, margin // 2.5, color=WHITE, rotate=True
-        )
-        write_text(
-            self.player_1.name,
-            bas_i_2,
-            margin // 3,
-            margin // 1.5,
-            margin // 1.5,
-            color=self.player_1.color,
-        )
-        write_text(
-            self.player_2.name,
-            margin // 3,
-            bas_i_2,
-            30,
-            30,
-            color=self.player_2.color,
-            rotate=True,
-        )
+    
 
     def update(self, win: pygame.Surface = WIN, bg_color: Tuple = BG_COLOR):
         win.fill(bg_color)
@@ -104,6 +68,6 @@ class GameController:
                 winner_txt, WIDTH // 3, HEIGHT // 3, SQUARE_SIZE * 4, SQUARE_SIZE * 2
             )
         else:
-            self.player_and_triangle(win)
+            player_and_triangle(self.player_1, self.player_2)
             self.board.draw(win)
         pygame.display.update()
