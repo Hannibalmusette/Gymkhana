@@ -3,10 +3,10 @@ import pygame
 pygame.init()
 
 WIDTH, HEIGHT = 600, 600
-MARGIN = WIDTH // 12
-WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 ROWS, COLS = 11, 11
-SQUARE_SIZE = (WIDTH - MARGIN) // COLS
+WIN = pygame.display.set_mode((WIDTH, HEIGHT))
+SQUARE_SIZE = WIDTH // (COLS + 1)
+MARGIN = SQUARE_SIZE // 2
 FORBIDDEN_SQUARES = (
     {(x, 0) for x in range(ROWS)}
     | {(0, y) for y in range(COLS)}
