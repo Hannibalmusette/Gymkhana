@@ -5,8 +5,7 @@ import pygame
 
 from gymkhana.board import Board, player_and_triangle
 from gymkhana.choices import choices, write_text
-from gymkhana.constants import BG_COLOR, WIN
-from gymkhana.constants.constants import HEIGHT, SQUARE_SIZE, WIDTH
+from gymkhana.constants import BG_COLOR, WIN, HEIGHT, SQUARE_SIZE, WIDTH, BIG_FONT 
 from gymkhana.smarter_than_you import next_move
 
 
@@ -42,9 +41,7 @@ class GameController:
 
     def move(self, row: int, col: int):
         if self.board.you_can_use_this_square(row, col):
-            self.board.draw_piece(
-                self.board.add_piece(row, col, self.turn.num, self.turn.color)
-            )
+            self.board.draw_piece(self.board.add_piece(row, col, self.turn.num, self.turn.color))
             if not self.winner():
                 self.change_turn()
 
@@ -57,8 +54,7 @@ class GameController:
         )
 
     def winner(self) -> str:
-        winner = self.board.winner()
-        return self.turn.name if winner else self.board.losers(self.turns_counter)
+        return self.turn.name if self.board.winner() else self.board.losers(self.turns_counter)
 
     def show_winner(
         self, winner: str, win: pygame.Surface = WIN, bg_color: Tuple = BG_COLOR
@@ -70,6 +66,7 @@ class GameController:
             WIDTH // 3,
             HEIGHT // 3,
             WIDTH // 3,
-            HEIGHT // 4,
+            HEIGHT // 3,
             color=self.turn.color,
+            font=BIG_FONT
         )

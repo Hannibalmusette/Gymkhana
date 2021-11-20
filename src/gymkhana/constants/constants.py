@@ -16,6 +16,7 @@ FORBIDDEN_SQUARES = (
 TOTAL_SQUARES = ROWS * COLS - 2 * len(FORBIDDEN_SQUARES)
 PADDING = SQUARE_SIZE // 2
 FONT = pygame.font.Font(None, 32)
+BIG_FONT = pygame.font.Font(None, 64)
 
 BLACK = (17, 17, 17)
 WHITE = (255, 255, 255)

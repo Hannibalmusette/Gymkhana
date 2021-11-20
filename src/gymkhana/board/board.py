@@ -8,7 +8,7 @@ from gymkhana.constants import BG_COLOR, COLS, FORBIDDEN_SQUARES, ROWS, WIN
 
 
 def look_for_connections(node: Node, path: List) -> Generator:
-    return (connection for connection in node.connections if connection not in path)
+    return {connection for connection in node.connections if connection not in path}
 
 
 class Board:
@@ -21,6 +21,7 @@ class Board:
             len([square for row in self.board for square in row])
             - len(FORBIDDEN_SQUARES)
         ) // 2 + 1
+        self.departure_nodes = {self.board[row][col] for col in range(COLS) for row in range(ROWS) if min(row, col) == 0 and isinstance(self.board[row][col], Node)}
 
     def initial_board(self, win=WIN, bg_color=BG_COLOR):
         win.fill(bg_color)
@@ -30,11 +31,8 @@ class Board:
                 if row % 2 == col % 2:
                     self.board[row].append(0)
                 else:
-                    node = (
-                        Node(row, col, self.color_1)
-                        if row % 2 == 0
-                        else Node(row, col, self.color_2)
-                    )
+                    color = self.color_1 if row % 2 == 0 else self.color_2
+                    node = Node(row, col, color)
                     self.board[row].append(node)
                     node.draw()
 
@@ -60,8 +58,8 @@ class Board:
         else:
             node_1 = self.board[row - 1][col]
             node_2 = self.board[row + 1][col]
-        node_1.add_connection(node_2.row, node_2.col)
-        node_2.add_connection(node_1.row, node_1.col)
+        node_1.connections.add(node_2)
+        node_2.connections.add(node_1)
 
     def add_piece(self, row: int, col: int, num: int, color: Tuple):
         piece = Piece(row, col, num, color)
@@ -72,30 +70,16 @@ class Board:
     def draw_piece(self, piece: Piece):
         piece.draw()
 
-    def winning_path(self, path: List):
-        """
-        Check if a given path is winning.
-        """
-        for connection in path:
-            row, col = connection
-            if row == ROWS - 1 or col == COLS - 1:
+    def winning_path(self, path: List[Node]):
+        for node in path:
+            if node.row == ROWS - 1 or node.col == COLS - 1:
                 return True
-            node = self.board[row][col]
             path.extend(look_for_connections(node, path))
 
     def winner(self):
-        """
-        Check if there is a winner.
-        """
-        winner = None
-        for row in range(ROWS):
-            for col in range(COLS):
-                if (col == 0 or row == 0) and isinstance(self.board[row][col], Node):
-                    path = [(row, col)]
-                    if self.winning_path(path):
-                        winner = True
-                        break
-        return winner
+        for node in self.departure_nodes:
+            if node.connections and self.winning_path([node]):
+                return True
 
     def losers(self, turns_count):
         if self.init_free_squares - turns_count == 0:

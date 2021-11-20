@@ -10,7 +10,7 @@ class Node:
         self.row = row
         self.col = col
         self.color = color
-        self.connections = []
+        self.connections = set()
 
     def draw(self, win=WIN, sq_size=SQUARE_SIZE, padding=PADDING, margin=MARGIN):
         radius = sq_size // 4
@@ -23,9 +23,6 @@ class Node:
             ),
             radius,
         )
-
-    def add_connection(self, row: int, col: int):
-        self.connections.append((row, col))
 
     def __repr__(self, colors_dict=COLORS_DICT):
         return colors_dict[self.color] + " NODE"
