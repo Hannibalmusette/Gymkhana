@@ -6,8 +6,7 @@ import pygame
 from gymkhana.board import Board, player_and_triangle
 from gymkhana.choices import choices, write_text
 from gymkhana.constants import BG_COLOR, WIN
-from gymkhana.constants.constants import (HEIGHT, MARGIN, SQUARE_SIZE, WHITE,
-                                          WIDTH)
+from gymkhana.constants.constants import HEIGHT, SQUARE_SIZE, WIDTH
 from gymkhana.smarter_than_you import next_move
 
 
@@ -30,6 +29,7 @@ class GameController:
 
         # Initialize the board
         self.board = Board(self.player_1.color, self.player_2.color)
+        player_and_triangle(self.player_1, self.player_2)
 
         self.turn = self.player_1
 
@@ -42,7 +42,9 @@ class GameController:
 
     def move(self, row: int, col: int):
         if self.board.you_can_use_this_square(row, col):
-            self.board.add_piece(row, col, self.turn.num, self.turn.color)
+            self.board.draw_piece(
+                self.board.add_piece(row, col, self.turn.num, self.turn.color)
+            )
             if not self.winner():
                 self.change_turn()
 
@@ -58,16 +60,16 @@ class GameController:
         winner = self.board.winner()
         return self.turn.name if winner else self.board.losers(self.turns_counter)
 
-    
-
-    def update(self, win: pygame.Surface = WIN, bg_color: Tuple = BG_COLOR):
+    def show_winner(
+        self, winner: str, win: pygame.Surface = WIN, bg_color: Tuple = BG_COLOR
+    ):
         win.fill(bg_color)
-        if self.winner():
-            winner_txt = self.winner() + " WON !"
-            write_text(
-                winner_txt, WIDTH // 3, HEIGHT // 3, SQUARE_SIZE * 4, SQUARE_SIZE * 2
-            )
-        else:
-            player_and_triangle(self.player_1, self.player_2)
-            self.board.draw(win)
-        pygame.display.update()
+        winner_txt = winner + " WON !"
+        write_text(
+            winner_txt,
+            WIDTH // 3,
+            HEIGHT // 3,
+            WIDTH // 3,
+            HEIGHT // 4,
+            color=self.turn.color,
+        )
