@@ -17,13 +17,10 @@ def main():
     """
     Run the game while it has to, i.e. there is no winner and no one closed the game windows.
     """
-    run = True
-    winner = False
     game_controller = GameController()
+    run = True
 
     while run:
-
-        pygame.display.update()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -33,15 +30,15 @@ def main():
                 game_controller.move(*get_square_from_mouse(pygame.mouse.get_pos()))
 
         if game_controller.winner():
-            winner = True
             game_controller.show_winner(game_controller.winner())
 
-        if not winner and game_controller.bot_turn():
+        elif game_controller.bot_turn():
             game_controller.bot_move()
 
+        pygame.display.update()
+    
     pygame.quit()
-
-
+    
 pygame.init()
 pygame.display.set_caption("Gymkhana")
 main()
