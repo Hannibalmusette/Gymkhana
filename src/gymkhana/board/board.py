@@ -4,7 +4,7 @@ from pygame import Surface
 
 from gymkhana.board.node import Node
 from gymkhana.board.piece import Piece
-from gymkhana.constants import COLS, FORBIDDEN_SQUARES, ROWS
+from gymkhana.constants import BG_COLOR, COLS, FORBIDDEN_SQUARES, ROWS, WIN
 
 
 def look_for_connections(node: Node, path: List) -> Generator:
@@ -22,23 +22,21 @@ class Board:
             - len(FORBIDDEN_SQUARES)
         ) // 2 + 1
 
-    def initial_board(self):
+    def initial_board(self, win=WIN, bg_color=BG_COLOR):
+        win.fill(bg_color)
         for row in range(ROWS):
             self.board.append([])
             for col in range(COLS):
                 if row % 2 == col % 2:
                     self.board[row].append(0)
                 else:
-                    if row % 2 == 0:
-                        self.board[row].append(Node(row, col, self.color_1))
-                    else:
-                        self.board[row].append(Node(row, col, self.color_2))
-
-    def draw(self, win: Surface):
-        for row in self.board:
-            for square in row:
-                if square != 0:
-                    square.draw(win)
+                    node = (
+                        Node(row, col, self.color_1)
+                        if row % 2 == 0
+                        else Node(row, col, self.color_2)
+                    )
+                    self.board[row].append(node)
+                    node.draw()
 
     def you_can_use_this_square(self, row: int, col: int) -> bool:
         """
@@ -69,6 +67,10 @@ class Board:
         piece = Piece(row, col, num, color)
         self.board[row][col] = piece
         self.connect(piece)
+        return piece
+
+    def draw_piece(self, piece: Piece):
+        piece.draw()
 
     def winning_path(self, path: List):
         """

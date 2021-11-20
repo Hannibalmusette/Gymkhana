@@ -2,7 +2,7 @@ from typing import Tuple
 
 import pygame
 
-from gymkhana.constants import COLORS_DICT, MARGIN, PADDING, SQUARE_SIZE
+from gymkhana.constants import COLORS_DICT, MARGIN, PADDING, SQUARE_SIZE, WIN
 
 
 class Node:
@@ -12,7 +12,7 @@ class Node:
         self.color = color
         self.connections = []
 
-    def draw(self, win, sq_size=SQUARE_SIZE, padding=PADDING, margin=MARGIN):
+    def draw(self, win=WIN, sq_size=SQUARE_SIZE, padding=PADDING, margin=MARGIN):
         radius = sq_size // 4
         pygame.draw.circle(
             win,

@@ -23,10 +23,7 @@ def main():
 
     while run:
 
-        game_controller.update()
-
-        if game_controller.winner():
-            winner = True
+        pygame.display.update()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -34,6 +31,10 @@ def main():
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 game_controller.move(*get_square_from_mouse(pygame.mouse.get_pos()))
+
+        if game_controller.winner():
+            winner = True
+            game_controller.show_winner(game_controller.winner())
 
         if not winner and game_controller.bot_turn():
             game_controller.bot_move()

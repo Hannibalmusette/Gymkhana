@@ -3,7 +3,7 @@ from typing import Tuple
 import pygame
 
 from gymkhana.constants import (COLORS_DICT, MARGIN, PADDING, PIECE_LAR,
-                                PIECE_LEN, SQUARE_SIZE)
+                                PIECE_LEN, SQUARE_SIZE, WIN)
 
 
 class Piece:
@@ -32,7 +32,7 @@ class Piece:
         y = self.calc_pos(self.row, h)
         return x, y, w, h
 
-    def draw(self, win):
+    def draw(self, win=WIN):
         pygame.draw.rect(win, self.color, self.calc_param())
 
     def __repr__(self, colors_dict=COLORS_DICT):
